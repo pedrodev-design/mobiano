@@ -236,22 +236,22 @@
             color: #1c1917;
         }
 
-        /* Fullscreen Mobile Menu Redesign */
+        /* Fullscreen Mobile Menu */
         .mobile-menu {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100vh;
-            background: rgba(28, 25, 23, 0.95);
+            height: 100dvh;
+            background: rgba(12, 10, 9, 0.97);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 2000;
-            display: none;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -371,19 +371,22 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 16px;
+            padding: 24px;
         }
 
         .preloader-text {
             color: white;
-            font-size: 14px;
-            letter-spacing: 0.8em;
+            font-size: clamp(11px, 3vw, 14px);
+            letter-spacing: clamp(0.3em, 2vw, 0.8em);
             font-weight: 300;
+            text-align: center;
         }
 
         .preloader-line {
             width: 0;
             height: 1px;
+            max-width: 200px;
             background: #c5a36b;
             transition: width 0.5s ease;
         }
@@ -466,14 +469,7 @@
             color: #c5a36b;
         }
 
-        .hero-eyebrow::before {
-            content: '';
-            display: block;
-            width: 40px;
-            height: 1px;
-            background: #c5a36b;
-            flex-shrink: 0;
-        }
+       
 
         .hero-title {
             font-size: clamp(48px, 6vw, 80px);
@@ -1217,12 +1213,10 @@
             color: #c5a36b;
         }
 
+        /* =============================================
+           RESPONSIVE — TABLET (≤1024px)
+           ============================================= */
         @media (max-width: 1024px) {
-
-            .hero-title,
-            .showroom-title {
-                font-size: 64px;
-            }
 
             .section-title-large,
             .marca-title,
@@ -1253,50 +1247,82 @@
             }
         }
 
+        /* =============================================
+           RESPONSIVE — MOBILE (≤768px)
+           ============================================= */
         @media (max-width: 768px) {
             .container {
-                padding: 0 24px;
+                padding: 0 20px;
             }
 
-            .nav-links,
-            .desktop-cta {
+            .nav-links {
                 display: none;
             }
 
             .mobile-toggle {
-                display: block;
+                display: flex !important;
             }
 
-            .hero-title,
-            .showroom-title,
-            .projects-title,
+            .section {
+                padding: 80px 0;
+            }
+
+            /* Showroom */
+            .showroom-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .showroom-title {
+                font-size: clamp(36px, 10vw, 64px);
+            }
+
+            .showroom-item {
+                border-left: none;
+                padding-left: 0;
+                text-align: center;
+                border-bottom: 1px solid #e7e5e4;
+                padding-bottom: 40px;
+                padding-top: 40px;
+            }
+
+            .showroom-item:first-child { padding-top: 0; }
+            .showroom-item:last-child { border-bottom: none; }
+
+            /* Projects */
+            .projects-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .projects-title { font-size: clamp(36px, 10vw, 60px); }
+            .projects-grid { gap: 64px; }
+            .project-card.offset { padding-top: 0; }
+
+            /* Section titles */
             .section-title-large,
             .marca-title {
-                font-size: 42px;
-                text-align: center;
+                font-size: clamp(32px, 9vw, 52px);
             }
 
-            .section-kicker {
-                justify-content: center;
-            }
+            .section-kicker { justify-content: flex-start; }
 
             .section-paragraph {
                 border-left: none;
                 padding-left: 0;
-                text-align: center;
             }
 
-            .projects-header {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                gap: 24px;
-            }
+            /* Legado / CEO */
+            .legado-inner { gap: 48px; }
+            .ceo-quote { font-size: 28px; }
+            .legado-image { padding-right: 0; order: -1; }
 
+            /* Footer */
             .footer-grid {
                 grid-template-columns: 1fr;
+                gap: 48px;
                 text-align: center;
-                gap: 60px;
             }
 
             .footer-col {
@@ -1306,40 +1332,33 @@
                 align-items: center;
             }
 
-            .footer-logo {
-                display: flex;
-                justify-content: center;
-            }
-
-            .footer-tagline {
-                margin: 0 auto;
-            }
+            .footer-logo { justify-content: center; }
+            .footer-tagline { margin: 0 auto; }
 
             .footer-bottom {
                 flex-direction: column;
-                gap: 32px;
+                gap: 24px;
                 text-align: center;
             }
+        }
 
-            .section {
-                padding: 100px 0;
+        /* =============================================
+           RESPONSIVE — SMALL MOBILE (≤480px)
+           ============================================= */
+        @media (max-width: 480px) {
+            .container { padding: 0 16px; }
+
+            .section { padding: 60px 0; }
+
+            .ambientes-grid { gap: 32px; }
+
+            .btn-final {
+                padding: 20px 32px;
+                font-size: 10px;
             }
 
-            .showroom-grid {
-                grid-template-columns: 1fr;
-                gap: 48px;
-            }
-
-            .showroom-item {
-                border-left: none;
-                padding-left: 0;
-                text-align: center;
-                border-bottom: 1px solid #e7e5e4;
-                padding-bottom: 40px;
-            }
-
-            .showroom-item:last-child {
-                border-bottom: none;
+            .mobile-menu a {
+                font-size: clamp(24px, 8vw, 36px);
             }
         }
 
@@ -2022,68 +2041,47 @@
             });
         });
 
-        // Mobile Menu Logic with GSAP
+        // Mobile Menu Logic
         const mobileToggle = document.getElementById('mobileToggle');
         const burgerIcon = document.getElementById('burgerIcon');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileClose = document.getElementById('mobileClose');
         const mobileLinks = mobileMenu.querySelectorAll('a');
 
-        const menuTl = gsap.timeline({ paused: true });
+        // Set initial state — hidden but using visibility so GSAP can animate it
+        gsap.set(mobileMenu, { autoAlpha: 0, yPercent: -3 });
+        gsap.set(mobileLinks, { y: 30, opacity: 0 });
+        gsap.set(mobileClose, { opacity: 0 });
 
-        // Initial state for extraordinary animation
-        gsap.set(mobileMenu, { yPercent: -100, opacity: 0 });
+        function openMenu() {
+            mobileMenu.classList.add('active');
+            burgerIcon.classList.add('active');
+            lenis.stop();
 
-        menuTl.to(mobileMenu, {
-            display: 'flex',
-            visibility: 'visible',
-            yPercent: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: 'expo.inOut'
-        });
+            gsap.to(mobileMenu, { autoAlpha: 1, yPercent: 0, duration: 0.5, ease: 'power3.out' });
+            gsap.to(mobileLinks, { y: 0, opacity: 1, stagger: 0.07, duration: 0.6, ease: 'power3.out', delay: 0.15 });
+            gsap.to(mobileClose, { opacity: 1, duration: 0.4, delay: 0.1 });
+        }
 
-        menuTl.from(mobileLinks, {
-            y: 80,
-            opacity: 0,
-            stagger: 0.1,
-            duration: 1.2,
-            ease: 'power4.out',
-            clearProps: 'all'
-        }, '-=0.6');
-
-        menuTl.from(mobileClose, {
-            rotate: 90,
-            opacity: 0,
-            duration: 0.8,
-            ease: 'power2.out'
-        }, '-=1');
+        function closeMenu() {
+            gsap.to(mobileLinks, { y: 20, opacity: 0, stagger: 0.04, duration: 0.3, ease: 'power2.in' });
+            gsap.to(mobileClose, { opacity: 0, duration: 0.2 });
+            gsap.to(mobileMenu, {
+                autoAlpha: 0, yPercent: -3, duration: 0.5, ease: 'power3.in', delay: 0.1,
+                onComplete: () => {
+                    mobileMenu.classList.remove('active');
+                    burgerIcon.classList.remove('active');
+                    lenis.start();
+                }
+            });
+        }
 
         mobileToggle.addEventListener('click', () => {
-            if (!mobileMenu.classList.contains('active')) {
-                mobileMenu.classList.add('active');
-                burgerIcon.classList.add('active');
-                menuTl.play();
-                lenis.stop();
-            } else {
-                closeMenu();
-            }
+            mobileMenu.classList.contains('active') ? closeMenu() : openMenu();
         });
 
         mobileClose.addEventListener('click', closeMenu);
-
-        mobileLinks.forEach((link) => {
-            link.addEventListener('click', closeMenu);
-        });
-
-        function closeMenu() {
-            menuTl.reverse();
-            setTimeout(() => {
-                mobileMenu.classList.remove('active');
-                burgerIcon.classList.remove('active');
-                lenis.start();
-            }, 600);
-        }
+        mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
 
 
 
