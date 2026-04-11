@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mobiano</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/cooper-hewitt');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: auto !important;
+        }
+
+        /* Minimalist Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #faf9f6;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5a36b;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a38558;
+        }
+
+
+        body {
+            font-family: 'Cooper Hewitt', sans-serif;
+            background: #faf9f6;
+            color: #1c1917;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        button {
+            font-family: inherit;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        .section {
+            padding: 160px 0;
+        }
+
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 32px 0;
+            transition: padding 0.5s ease-out, background-color 0.5s ease, border-color 0.5s ease;
+            background: transparent;
+        }
+
+        .navbar.scrolled {
+            padding: 16px 0;
+            background: rgba(250, 249, 246, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(28, 25, 23, 0.05);
+        }
+
+        .navbar-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 36px;
+            width: auto;
+            display: block;
+            transition: opacity 0.6s ease, filter 0.6s ease;
+            transform-origin: left center;
+        }
+
+        .navbar.scrolled .logo img {
+            filter: invert(1);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+        }
+
+        .nav-link-item {
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: white;
+            transition: color 0.4s ease, opacity 0.4s ease;
+            position: relative;
+            padding: 8px 0;
+            opacity: 0.7;
+        }
+
+        .navbar.scrolled .nav-link-item {
+            color: #1c1917;
+            opacity: 0.6;
+        }
+
+        .nav-link-item:hover {
+            opacity: 1;
+        }
+
+        .nav-link-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .nav-link-item:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .btn-nav {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            padding: 14px 32px;
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 16px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-nav span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-nav::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1), border-radius 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+            z-index: -1;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .navbar.scrolled .btn-nav {
+            color: #1c1917;
+            border-color: rgba(28, 25, 23, 0.15);
+        }
+
+        .navbar.scrolled .btn-nav::before {
+            background: #1c1917;
+        }
+
+        .btn-nav:hover {
+            color: #1c1917;
+            border-color: white;
+        }
+
+        .btn-nav:hover::before {
+            transform: translateY(-100%);
+            border-radius: 0;
+        }
+
+        .navbar.scrolled .btn-nav:hover {
+            color: white;
+            border-color: #1c1917;
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 28px;
+            color: white;
+        }
+
+        .navbar.scrolled .mobile-toggle {
+            color: #1c1917;
+        }
+
+        /* Fullscreen Mobile Menu Redesign */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(28, 25, 23, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .mobile-menu.active {
+            pointer-events: all;
+        }
+
+        .mobile-menu a {
+            font-size: clamp(32px, 8vw, 48px);
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: white;
+            transition: all 0.4s ease;
+            text-align: center;
+            opacity: 0.4;
+            position: relative;
+        }
+
+        .mobile-menu a:hover {
+            opacity: 1;
+            letter-spacing: 0.3em;
+            transform: scale(1.1);
+        }
+
+        .mobile-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0%;
+            height: 1px;
+            background: #c5a36b;
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
+        }
+
+        .mobile-menu a:hover::after {
+            width: 40px;
+        }
+
+        .mobile-menu .cta-mobile {
+            margin-top: 48px;
+            padding: 14px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.4em;
+            opacity: 1;
+            color: #c5a36b;
+            border-color: #c5a36b;
+        }
+
+        .mobile-close {
+            position: absolute;
+            top: 40px;
+            right: 24px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 32px;
+            padding: 10px;
+            cursor: none !important;
+        }
+
+        /* Animated Burger */
+        .mobile-toggle {
+            background: none;
+            border: none;
+            padding: 10px;
+            display: none;
+        }
+
+        .burger-icon {
+            width: 30px;
+            height: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .burger-line {
+            width: 100%;
+            height: 1px;
+            background: white;
+            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .navbar.scrolled .burger-line {
+            background: #1c1917;
+        }
+
+        .burger-icon.active .burger-line:nth-child(1) {
+            transform: translateY(9.5px) rotate(45deg);
+            background: white;
+        }
+
+        .burger-icon.active .burger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-icon.active .burger-line:nth-child(3) {
+            transform: translateY(-9.5px) rotate(-45deg);
+            background: white;
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: #0c0a09;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .preloader-text {
+            color: white;
+            font-size: 14px;
+            letter-spacing: 0.8em;
+            font-weight: 300;
+        }
+
+        .preloader-line {
+            width: 0;
+            height: 1px;
+            background: #c5a36b;
+            transition: width 0.5s ease;
+        }
+
+        /* Split Text Prep */
+        .split-text {
+            overflow: hidden;
+            display: block;
+        }
+
+        .split-line {
+            display: block;
+            opacity: 0;
+            transform: translateY(100%);
+        }
+
+        /* HERO LUXUOSO */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            background: #0c0a09;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.55;
+            transform: scale(1.1);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(
+                135deg,
+                rgba(0,0,0,0.65) 0%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.55) 100%
+            );
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1280px;
+            padding: 0 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            color: #c5a36b;
+        }
+
+        .hero-eyebrow::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: #c5a36b;
+            flex-shrink: 0;
+        }
+
+        .hero-title {
+            font-size: clamp(48px, 6vw, 80px);
+            font-weight: 300;
+            line-height: 1.05;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            font-weight: 300;
+            color: rgba(255,255,255,0.55);
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            font-weight: 300;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.9;
+            max-width: 420px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 40px;
+            background: #c5a36b;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.35em;
+            transition: all 0.4s ease;
+            border-radius: 2px;
+        }
+
+        .btn-hero:hover {
+            background: white;
+            color: #1c1917;
+        }
+
+        .hero-link {
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: rgba(255,255,255,0.45);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s ease, gap 0.3s ease;
+        }
+
+        .hero-link:hover {
+            color: white;
+            gap: 18px;
+        }
+
+        .hero-right {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Glass Card */
+        .hero-glass {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glass inner highlight */
+        .hero-glass::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+        }
+
+        .glass-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            color: #c5a36b;
+        }
+
+        .glass-quote {
+            font-size: 21px;
+            font-weight: 300;
+            line-height: 1.6;
+            color: white;
+            font-style: italic;
+        }
+
+        .glass-divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .glass-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px 16px;
+        }
+
+        .glass-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .glass-stat-number {
+            font-size: 30px;
+            font-weight: 300;
+            color: white;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .glass-stat-label {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: rgba(255,255,255,0.35);
+        }
+
+        .glass-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.1em;
+        }
+
+        .glass-footer-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #c5a36b;
+            flex-shrink: 0;
+        }
+
+        /* Scroll indicator */
+        .hero-scroll {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-scroll span {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .hero-scroll-line {
+            width: 1px;
+            height: 56px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+            animation: scrollPulse 2.2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.8) translateY(-10%); }
+            50% { opacity: 1; transform: scaleY(1) translateY(0); }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding-top: 120px;
+                padding-bottom: 80px;
+            }
+            .hero-left { align-items: center; }
+            .hero-subtitle { max-width: 100%; }
+            .hero-right { justify-content: center; }
+            .hero-glass { max-width: 100%; }
+            .hero-eyebrow { justify-content: center; }
+            .hero-actions { justify-content: center; }
+        }
+
+        .section-white {
+            background: white;
+        }
+
+        .section-dark {
+            background: #0c0a09;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-dark::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: rgba(28, 25, 23, 0.3);
+            transform: skewX(12deg) translateX(128px);
+        }
+
+        .section-header-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 64px;
+            align-items: start;
+            margin-bottom: 128px;
+        }
+
+        .section-kicker {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6em;
+            color: #d6d3d1;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .section-kicker .line {
+            width: 48px;
+            height: 1px;
+            background: #e7e5e4;
+        }
+
+        .section-title-large {
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .section-paragraph {
+            color: #a8a29e;
+            font-size: 18px;
+            font-weight: 300;
+            line-height: 1.8;
+            border-left: 1px solid #f5f5f4;
+            padding-left: 32px;
+        }
+
+        .ambientes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+        }
+
+        .ambiente-card {
+            position: relative;
+            padding-top: 32px;
+        }
+
+        .ambiente-number {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 60px;
+            font-weight: 700;
+            color: #f5f5f4;
+            opacity: 0;
+            transition: opacity 0.7s ease;
+            z-index: 0;
+        }
+
+        .ambiente-card:hover .ambiente-number {
+            opacity: 1;
+        }
+
+        .ambiente-image {
+            position: relative;
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            background: #f5f5f4;
+            z-index: 1;
+        }
+
+        .ambiente-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0);
+            transition: all 1s ease;
+        }
+
+        .ambiente-card:hover .ambiente-image img {
+            filter: grayscale(1);
+            transform: scale(1.1);
+        }
+
+        .ambiente-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(28, 25, 23, 0.4);
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.7s ease;
+        }
+
+        .ambiente-card:hover .ambiente-overlay {
+            opacity: 1;
+        }
+
+        .ambiente-overlay button {
+            padding: 12px 32px;
+            background: white;
+            color: #1c1917;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            transform: translateY(40px);
+            transition: transform 0.7s ease;
+        }
+
+        .ambiente-card:hover .ambiente-overlay button {
+            transform: translateY(0);
+        }
+
+        .ambiente-title {
+            margin-top: 32px;
+            font-size: 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .ambiente-line {
+            height: 1px;
+            background: #1c1917;
+            margin-top: 16px;
+            width: 0;
+            transition: width 1s ease;
+        }
+
+        .ambiente-line.active {
+            width: 100%;
+        }
+
+        .marca-inner {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 96px;
+        }
+
+        .marca-image,
+        .marca-text {
+            width: 50%;
+        }
+
+        .marca-frame {
+            position: relative;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .marca-frame img {
+            width: 100%;
+            opacity: 0.8;
+            transition: opacity 1s ease;
+        }
+
+        .marca-frame:hover img {
+            opacity: 1;
+        }
+
+        .marca-badge {
+            position: absolute;
+            right: -40px;
+            bottom: -40px;
+            width: 160px;
+            height: 160px;
+            background: white;
+            color: #1c1917;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .marca-badge p {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            line-height: 1.6;
+        }
+
+        .marca-kicker {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6em;
+            color: #78716c;
+            margin-bottom: 32px;
+        }
+
+        .marca-title {
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 0.9;
+            margin-bottom: 48px;
+        }
+
+        .marca-quote {
+            color: #a8a29e;
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1.8;
+            font-style: italic;
+            margin-bottom: 48px;
+        }
+
+        .marca-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+        }
+
+        .projects-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 128px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid #f5f5f4;
+            gap: 24px;
+        }
+
+        .projects-title {
+            font-size: 80px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .projects-year {
+            color: #d6d3d1;
+            font-size: 14px;
+            letter-spacing: 0.4em;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 128px;
+        }
+
+        .project-card.offset {
+            padding-top: 160px;
+        }
+
+        .project-image {
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            transition: all 1s ease;
+        }
+
+        .project-card:hover .project-image {
+            box-shadow: 0 25px 50px rgba(231, 229, 228, 0.9);
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            aspect-ratio: 4 / 5;
+            transition: transform 2s ease;
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05) rotate(1deg);
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .project-type {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: #d6d3d1;
+            margin-bottom: 8px;
+        }
+
+        .project-name {
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .project-arrow {
+            width: 48px;
+            height: 48px;
+            border: 1px solid #f5f5f4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+            flex-shrink: 0;
+        }
+
+        .project-card:hover .project-arrow {
+            background: #1c1917;
+            color: white;
+        }
+
+        .showrooms {
+            background: #f5f5f4;
+            overflow: hidden;
+        }
+
+        .showroom-badge {
+            display: inline-block;
+            padding: 8px 32px;
+            background: #1c1917;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            margin-bottom: 80px;
+        }
+
+        .showroom-title {
+            font-size: 96px;
+            font-weight: 700;
+            color: #1c1917;
+            margin-bottom: 80px;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .showroom-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 96px;
+            text-align: left;
+            max-width: 1000px;
+            margin: 0 auto 128px;
+        }
+
+        .showroom-item {
+            border-left: 1px solid #e7e5e4;
+            padding-left: 32px;
+            transition: border-color 0.7s ease;
+        }
+
+        .showroom-item:hover {
+            border-color: #1c1917;
+        }
+
+        .showroom-item h5 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1c1917;
+            margin-bottom: 16px;
+        }
+
+        .showroom-item p {
+            color: #78716c;
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        .showroom-item a {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: gap 0.4s ease;
+        }
+
+        .showroom-item:hover a {
+            gap: 16px;
+        }
+
+        .btn-final {
+            display: inline-block;
+            padding: 32px 64px;
+            background: #1c1917;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6em;
+            box-shadow: 0 25px 50px rgba(168, 162, 158, 0.5);
+            transition: transform 0.7s ease;
+        }
+
+        .btn-final:hover {
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background: #faf9f6;
+            padding: 120px 0 60px;
+            border-top: 1px solid #e7e5e4;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr;
+            gap: 80px;
+            margin-bottom: 80px;
+        }
+
+        .footer-logo img {
+            height: 80px; /* Increased for better visibility */
+            width: auto;
+            filter: invert(1) brightness(0.2);
+            margin-bottom: 24px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-logo img:hover {
+            opacity: 0.7;
+        }
+
+        .footer-tagline {
+            font-size: 14px;
+            color: #78716c;
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .footer-col h4 {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #1c1917;
+            margin-bottom: 32px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 16px;
+        }
+
+        .footer-col ul li a {
+            font-size: 12px;
+            color: #78716c;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #c5a36b;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 40px;
+            border-top: 1px solid #e7e5e4;
+        }
+
+        .footer-copy {
+            font-size: 10px;
+            color: #a8a29e;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-socials a {
+            font-size: 18px;
+            color: #1c1917;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-socials a:hover {
+            transform: translateY(-3px);
+            color: #c5a36b;
+        }
+
+        @media (max-width: 1024px) {
+
+            .hero-title,
+            .showroom-title {
+                font-size: 64px;
+            }
+
+            .section-title-large,
+            .marca-title,
+            .projects-title {
+                font-size: 52px;
+            }
+
+            .section-header-grid,
+            .ambientes-grid,
+            .projects-grid,
+            .showroom-grid,
+            .marca-inner {
+                grid-template-columns: 1fr;
+                flex-direction: column;
+            }
+
+            .marca-image,
+            .marca-text {
+                width: 100%;
+            }
+
+            .project-card.offset {
+                padding-top: 0;
+            }
+
+            .marca-badge {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+
+            .nav-links,
+            .desktop-cta {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero-title,
+            .showroom-title,
+            .projects-title,
+            .section-title-large,
+            .marca-title {
+                font-size: 42px;
+                text-align: center;
+            }
+
+            .section-kicker {
+                justify-content: center;
+            }
+
+            .section-paragraph {
+                border-left: none;
+                padding-left: 0;
+                text-align: center;
+            }
+
+            .projects-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 24px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 60px;
+            }
+
+            .footer-col {
+                padding-left: 0 !important;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-logo {
+                display: flex;
+                justify-content: center;
+            }
+
+            .footer-tagline {
+                margin: 0 auto;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 32px;
+                text-align: center;
+            }
+
+            .section {
+                padding: 100px 0;
+            }
+
+            .showroom-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .showroom-item {
+                border-left: none;
+                padding-left: 0;
+                text-align: center;
+                border-bottom: 1px solid #e7e5e4;
+                padding-bottom: 40px;
+            }
+
+            .showroom-item:last-child {
+                border-bottom: none;
+            }
+        }
+
+        .legado {
+            background: #fafaf9;
+            padding: 160px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .legado-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, #e7e5e4 1px, transparent 1px),
+                linear-gradient(to bottom, #e7e5e4 1px, transparent 1px);
+            background-size: 80px 80px;
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .legado-axis {
+            position: absolute;
+            top: 20%;
+            left: 5%;
+            width: 90%;
+            height: 1px;
+            background: #e7e5e4;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .legado-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 120px;
+            align-items: center;
+        }
+
+        .legado-content {
+            position: relative;
+        }
+
+        .ceo-quote {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 48px;
+            letter-spacing: -0.02em;
+            color: #1c1917;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ceo-info {
+            border-left: 1px solid #e7e5e4;
+            padding-left: 40px;
+            margin-bottom: 48px;
+        }
+
+        .ceo-name {
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #1c1917;
+            margin-bottom: 12px;
+        }
+
+        .ceo-stats {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: #a8a29e;
+            margin-bottom: 24px;
+        }
+
+        .ceo-description {
+            font-size: 18px;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #57534e;
+            margin-bottom: 40px;
+        }
+
+        .ceo-social {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #1c1917;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #1c1917;
+        }
+
+        .legado-image {
+            position: relative;
+            padding-right: 60px;
+        }
+
+        .ceo-portrait-frame {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            border: 1px solid #e7e5e4;
+            background: white;
+            transition: all 0.6s ease;
+        }
+
+        .legado:hover .ceo-portrait-frame {
+            border-color: #1c1917;
+            transform: translateY(-10px);
+        }
+
+        .ceo-portrait-frame img {
+            width: 100%;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(1);
+        }
+
+        .legado-badge {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            width: 160px;
+            height: 160px;
+            background: #0c0a09;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+            z-index: 2;
+        }
+
+        .legado-badge span {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1024px) {
+            .legado-inner {
+                grid-template-columns: 1fr;
+                gap: 80px;
+            }
+
+            .ceo-quote {
+                font-size: 32px;
+            }
+
+            .legado-image {
+                padding-right: 0;
+                order: -1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar" id="navbar">
+        <div class="container navbar-inner">
+            <div class="logo"><img src="img/logo.png" alt="Mobiano" loading="lazy"></div>
+
+            <nav class="nav-links">
+                <a href="#ambientes" class="nav-link-item">Ambientes</a>
+                <a href="#marca" class="nav-link-item">A Marca</a>
+                <a href="#legado" class="nav-link-item">O Fundador</a>
+                <a href="#projetos" class="nav-link-item">Projetos</a>
+                <a href="#lojas" class="nav-link-item">Lojas</a>
+                <a class="btn-nav"
+                    href="https://api.whatsapp.com/send/?phone=5511961880078&text=Olá! Gostaria de solicitar um orçamento.&type=phone_number&app_absent=0"
+                    target="_blank">
+                    <span>Orçamento</span>
+                </a>
+            </nav>
+
+            <button class="mobile-toggle" id="mobileToggle">
+                <div class="burger-icon" id="burgerIcon">
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <main id="main-content">
+
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <img id="heroBg"
+                src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2400&auto=format&fit=crop"
+                alt="Mobiano Interior" loading="lazy" />
+        </div>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+            <!-- LEFT: headline + CTA -->
+            <div class="hero-left">
+                <div class="hero-eyebrow">Desde 2006</div>
+
+                <h1 class="hero-title">
+                    Do simples<br>ao <em>extraordinário.</em>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Móveis planejados para um novo padrão de viver.
+                    Cada projeto nasce da precisão técnica e da sensibilidade
+                    de quem entende o que é morar bem.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="btn-hero"
+                        href="https://api.whatsapp.com/send/?phone=5511961880078&text=Olá! Gostaria de solicitar um orçamento.&type=phone_number&app_absent=0"
+                        target="_blank">
+                        Iniciar Projeto
+                    </a>
+                    <a href="#ambientes" class="hero-link">
+                        Ver Ambientes <span>→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- RIGHT: glass card -->
+            <div class="hero-right">
+                <div class="hero-glass">
+                    <span class="glass-label">Excelência em Marcenaria</span>
+
+                    <p class="glass-quote">
+                        "O detalhe não é apenas um detalhe — é o design."
+                    </p>
+
+                    <div class="glass-divider"></div>
+
+                    <div class="glass-stats">
+                        <div class="glass-stat">
+                            <span class="glass-stat-number">+6k</span>
+                            <span class="glass-stat-label">Projetos Entregues</span>
+                        </div>
+                        <div class="glass-stat">
+                            <span class="glass-stat-number">20</span>
+                            <span class="glass-stat-label">Anos de Legado</span>
+                        </div>
+                        <div class="glass-stat">
+                            <span class="glass-stat-number">3</span>
+                            <span class="glass-stat-label">Showrooms Ativos</span>
+                        </div>
+                        <div class="glass-stat">
+                            <span class="glass-stat-number">100%</span>
+                            <span class="glass-stat-label">Sob Medida</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-footer">
+                        <div class="glass-footer-dot"></div>
+                        Estado de SP &nbsp;·&nbsp; Brasil sob consulta
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="hero-scroll">
+            <div class="hero-scroll-line"></div>
+            <span>Scroll</span>
+        </div>
+    </section>
+
+    <section id="ambientes" class="section section-white reveal">
+        <div class="container">
+            <div class="section-header-grid">
+                <div style="grid-column: span 6;" class="reveal">
+                    <h2 class="section-kicker">
+                        <span class="line"></span> Curadoria
+                    </h2>
+                    <h3 class="section-title-large">
+                        A EXPERIÊNCIA <br> DO AGORA.
+                    </h3>
+                </div>
+
+                <div style="grid-column: 8 / span 5;" class="reveal">
+                    <p class="section-paragraph">
+                        Cada peça é um diálogo entre a arquitetura do espaço e a alma de quem o habita.
+                        Mobiano não é apenas móvel; é um manifesto de estilo.
+                    </p>
+                </div>
+            </div>
+
+            <div class="ambientes-grid">
+                <div class="ambiente-card stagger-up delay-1">
+                    <span class="ambiente-number">01</span>
+                    <div class="ambiente-image">
+                        <img src="img/13.jpg" alt="Living Minimalista" loading="lazy">
+                        <div class="ambiente-overlay">
+                            <button>Explorar</button>
+                        </div>
+                    </div>
+                    <h4 class="ambiente-title">Living Minimalista</h4>
+                    <div class="ambiente-line"></div>
+                </div>
+
+                <div class="ambiente-card stagger-up delay-2">
+                    <span class="ambiente-number">02</span>
+                    <div class="ambiente-image">
+                        <img src="img/12.jpg" alt="Dormitório Master" loading="lazy">
+                        <div class="ambiente-overlay">
+                            <button>Explorar</button>
+                        </div>
+                    </div>
+                    <h4 class="ambiente-title">Dormitório Master</h4>
+                    <div class="ambiente-line"></div>
+                </div>
+
+                <div class="ambiente-card stagger-up delay-3">
+                    <span class="ambiente-number">03</span>
+                    <div class="ambiente-image">
+                        <img src="img/14.jpg" alt="Cozinha Gourmet" loading="lazy">
+                        <div class="ambiente-overlay">
+                            <button>Explorar</button>
+                        </div>
+                    </div>
+                    <h4 class="ambiente-title">Cozinha Gourmet</h4>
+                    <div class="ambiente-line"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="marca" class="section section-dark">
+        <div class="container marca-inner">
+            <div class="marca-image">
+                <div class="marca-frame">
+                    <img src="img/1.jpg" alt="Ateliê" loading="lazy">
+                    <div class="marca-badge">
+                        <p>Handmade Excellence</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="marca-text reveal">
+                <h2 class="marca-kicker">Nossa Gênese</h2>
+                <h3 class="marca-title">
+                    ONDE A MATÉRIA <br> ENCONTRA O ESPÍRITO.
+                </h3>
+
+                <p class="marca-quote">
+                    "Não criamos apenas objetos. Criamos o cenário onde a sua história acontece.
+                    A Mobiano é o equilíbrio entre o toque humano e o rigor geométrico."
+                </p>
+
+                <a class="marca-link" href="https://www.instagram.com/mobianooficial/" target="_blank">
+                    Siga nossa jornada <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="legado" class="legado reveal">
+        <div class="legado-grid"></div>
+        <div class="legado-axis"></div>
+        <div class="container">
+            <div class="legado-inner">
+                <div class="legado-content">
+                    <h4 class="section-kicker"><span class="line"></span> O Fundador</h4>
+                    <p class="ceo-quote">"Detalhe é filosofia, não acabamento."</p>
+
+                    <div class="ceo-info">
+                        <h5 class="ceo-name">Antônio Costa Dcôr</h5>
+                        <p class="ceo-stats">CEO &bull; 20 Anos de Legado &bull; +6.000 Projetos</p>
+                        <p class="ceo-description">
+                            Desde 2006, Antônio Costa Dcôr lidera a Mobiano com uma visão que transcende a marcenaria
+                            convencional. Para ele, cada projeto é uma expressão artística onde a precisão técnica serve
+                            à emoção do morar.
+                        </p>
+                        <a href="https://www.instagram.com/antoniocostadcor/" target="_blank" class="ceo-social">
+                            <i class="fab fa-instagram"></i> @antoniocostadcor
+                        </a>
+                    </div>
+                </div>
+
+                <div class="legado-image">
+                    <div class="legado-badge">
+                        <span>Desde 2006 Criando Histórias</span>
+                    </div>
+                    <div class="ceo-portrait-frame">
+                        <img src="img/foto_CEo.jpeg" alt="Antônio Costa Dcôr" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projetos" class="section section-white">
+        <div class="container">
+            <div class="projects-header">
+                <h3 class="projects-title">REFERÊNCIAS</h3>
+                <span class="projects-year">2023 — 2024</span>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card stagger-up delay-1">
+                    <div class="project-image">
+                        <img src="img/2.jpg" alt="Residência Arpoador" loading="lazy">
+                    </div>
+
+                    <div class="project-meta">
+                        <div>
+                            <p class="project-type">Living High-End</p>
+                            <h4 class="project-name">Residência Arpoador</h4>
+                        </div>
+                        <div class="project-arrow">→</div>
+                    </div>
+                </div>
+
+                <div class="project-card offset stagger-up delay-2">
+                    <div class="project-image">
+                        <img src="img/3.jpg" alt="Studio Jardins" loading="lazy">
+                    </div>
+
+                    <div class="project-meta">
+                        <div>
+                            <p class="project-type">Executive Suite</p>
+                            <h4 class="project-name">Studio Jardins</h4>
+                        </div>
+                        <div class="project-arrow">→</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="lojas" class="section showrooms">
+        <div class="container" style="text-align:center;">
+            <div class="showroom-badge">Onde Atuamos</div>
+
+            <h3 class="showroom-title">
+                LEVAMOS O MELHOR<br> ATÉ VOCÊ.
+            </h3>
+
+            <div class="showroom-grid">
+                <div class="showroom-item stagger-up delay-1">
+                    <h5>Estado de São Paulo</h5>
+                    <p>Atendemos todo o Estado de São Paulo com equipe própria, sem custos adicionais de deslocamento.</p>
+                    <a href="https://api.whatsapp.com/send/?phone=5511961880078&text=Olá! Gostaria de solicitar um orçamento.&type=phone_number&app_absent=0"
+                        target="_blank">
+                        Falar Agora <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+
+                <div class="showroom-item stagger-up delay-2">
+                    <h5>Outros Estados</h5>
+                    <p>Atendemos todo o Brasil, mediante avaliação de viabilidade logística. Entre em contato para verificar sua região.</p>
+                    <a href="https://api.whatsapp.com/send/?phone=5511961880078&text=Olá! Gostaria de saber se atendem minha região.&type=phone_number&app_absent=0"
+                        target="_blank">
+                        Verificar Região <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+
+                <div class="showroom-item stagger-up delay-3">
+                    <h5>Projetos Especiais</h5>
+                    <p>Grandes projetos residenciais ou corporativos de alta complexidade em qualquer localidade, com planejamento dedicado.</p>
+                    <a href="https://api.whatsapp.com/send/?phone=5511961880078&text=Olá! Tenho um projeto especial e gostaria de uma avaliação.&type=phone_number&app_absent=0"
+                        target="_blank">
+                        Solicitar Avaliação <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <a class="btn-final"
+                href="https://api.whatsapp.com/send/?phone=5511961880078&text=Olá! Gostaria de solicitar um orçamento.&type=phone_number&app_absent=0"
+                target="_blank">
+                <i class="fab fa-whatsapp"></i> Solicitar Orçamento via WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="img/logo.png" alt="Mobiano" loading="lazy">
+                    </div>
+                    <p class="footer-tagline">
+                        Arquitetura de interiores que transcende a funcionalidade, transformando ambientes em palcos de
+                        histórias e bem-estar.
+                    </p>
+                </div>
+
+                <div class="footer-col" style="padding-left: 40px;">
+                    <h4>Navegação</h4>
+                    <ul>
+                        <li><a href="#ambientes">Ambientes</a></li>
+                        <li><a href="#marca">A Marca</a></li>
+                        <li><a href="#fundador">O Fundador</a></li>
+                        <li><a href="#projetos">Projetos</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Contato</h4>
+                    <ul>
+                        <li><a href="https://api.whatsapp.com/send/?phone=5511961880078" target="_blank">Atendimento via
+                                WhatsApp</a></li>
+                        <li><a href="mailto:contato@mobiano.com.br">contato@mobiano.com.br</a></li>
+                        <li>
+                            <p style="font-size: 12px; color: #78716c; margin-top: 12px;">São Paulo — Rio de Janeiro —
+                                Miami</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-copy">© 2026 Mobiano Todos os Direitos Reservados.</p>
+                <div class="footer-socials">
+                    <a href="https://www.instagram.com/mobianooficial/" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://api.whatsapp.com/send/?phone=5511961880078" target="_blank"><i
+                            class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </main>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-close" id="mobileClose">✕</button>
+        <a href="#ambientes">Ambientes</a>
+        <a href="#marca">A Marca</a>
+        <a href="#legado">O Fundador</a>
+        <a href="#projetos">Projetos</a>
+        <a href="#lojas">Lojas</a>
+        <a class="cta-mobile"
+            href="https://api.whatsapp.com/send/?phone=5511961880078&text=Olá! Gostaria de solicitar um orçamento.&type=phone_number&app_absent=0"
+            target="_blank">
+            ORÇAMENTO
+        </a>
+    </div>
+
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="preloader-text">MOBIANO</div>
+        <div class="preloader-line"></div>
+    </div>
+
+    <script>
+        // Initialize Lenis Smooth Scroll
+        const lenis = new Lenis({
+            duration: 0.8, // Snappier
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        // Sync ScrollTrigger with Lenis
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+        
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.lagSmoothing(0);
+
+        // Navbar State Toggle
+        const navbar = document.getElementById('navbar');
+        lenis.on('scroll', ({ scroll }) => {
+            if (scroll > 80) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // --- PRELOADER & HERO ENTRANCE ---
+        const preloaderTl = gsap.timeline();
+
+        // Set initial hidden states via GSAP (not CSS so they don't get stuck)
+        gsap.set('.navbar', { opacity: 0, y: -20 });
+        gsap.set('.hero-title', { opacity: 0, y: 40 });
+        gsap.set('.btn-hero', { opacity: 0, y: 20 });
+
+        preloaderTl
+            .to('.preloader-line', { width: '200px', duration: 0.8, ease: 'power2.inOut' })
+            .to('.preloader', { yPercent: -100, duration: 1.0, ease: 'expo.inOut', delay: 0.1 })
+            .to('.navbar', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+            .to('.hero-title', { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' }, '-=0.6')
+            .to('.btn-hero', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.8');
+
+        // --- SECTION TEXT REVEALS ---
+        const sectionTitles = document.querySelectorAll('.section-title-large, .marca-title, .projects-title, .showroom-title');
+        sectionTitles.forEach(title => {
+            gsap.from(title, {
+                scrollTrigger: {
+                    trigger: title,
+                    start: 'top 85%'
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+            });
+        });
+
+        // --- EXISTING REVEALS ---
+
+        // Hero Parallax
+        gsap.to('#heroBg', {
+            scrollTrigger: {
+                trigger: '.hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: true
+            },
+            y: 250,
+            scale: 1.2,
+            ease: 'none'
+        });
+
+        // Standard Reveals
+        const reveals = gsap.utils.toArray('.reveal');
+        reveals.forEach((el) => {
+            gsap.set(el, { opacity: 0, y: 60 });
+            gsap.to(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                },
+                y: 0,
+                opacity: 1,
+                duration: 1.5,
+                ease: 'power3.out'
+            });
+        });
+
+        // Staggered reveals for grid items
+        const staggerUp = gsap.utils.toArray('.stagger-up');
+        staggerUp.forEach((el) => {
+            gsap.set(el, { opacity: 0, y: 40 });
+            gsap.to(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 90%',
+                    toggleActions: 'play none none none'
+                },
+                y: 0,
+                opacity: 1,
+                duration: 1.2,
+                ease: 'power2.out'
+            });
+        });
+
+        // Decorative Lines Animation
+        const lines = gsap.utils.toArray('.ambiente-line');
+        lines.forEach((line) => {
+            gsap.set(line, { width: 0 });
+            gsap.to(line, {
+                scrollTrigger: {
+                    trigger: line,
+                    start: 'top 90%',
+                },
+                width: '100%',
+                duration: 1.5,
+                ease: 'power2.inOut'
+            });
+        });
+
+        // Mobile Menu Logic with GSAP
+        const mobileToggle = document.getElementById('mobileToggle');
+        const burgerIcon = document.getElementById('burgerIcon');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileClose = document.getElementById('mobileClose');
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+
+        const menuTl = gsap.timeline({ paused: true });
+
+        // Initial state for extraordinary animation
+        gsap.set(mobileMenu, { yPercent: -100, opacity: 0 });
+
+        menuTl.to(mobileMenu, {
+            display: 'flex',
+            visibility: 'visible',
+            yPercent: 0,
+            opacity: 1,
+            duration: 1.2,
+            ease: 'expo.inOut'
+        });
+
+        menuTl.from(mobileLinks, {
+            y: 80,
+            opacity: 0,
+            stagger: 0.1,
+            duration: 1.2,
+            ease: 'power4.out',
+            clearProps: 'all'
+        }, '-=0.6');
+
+        menuTl.from(mobileClose, {
+            rotate: 90,
+            opacity: 0,
+            duration: 0.8,
+            ease: 'power2.out'
+        }, '-=1');
+
+        mobileToggle.addEventListener('click', () => {
+            if (!mobileMenu.classList.contains('active')) {
+                mobileMenu.classList.add('active');
+                burgerIcon.classList.add('active');
+                menuTl.play();
+                lenis.stop();
+            } else {
+                closeMenu();
+            }
+        });
+
+        mobileClose.addEventListener('click', closeMenu);
+
+        mobileLinks.forEach((link) => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        function closeMenu() {
+            menuTl.reverse();
+            setTimeout(() => {
+                mobileMenu.classList.remove('active');
+                burgerIcon.classList.remove('active');
+                lenis.start();
+            }, 600);
+        }
+
+
+
+        // --- SMOOTH SCROLL LOGIC ---
+        const navLinks = document.querySelectorAll('a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetId = link.getAttribute('href');
+                if (targetId === "#") return;
+                
+                const target = document.querySelector(targetId);
+                if (target) {
+                    e.preventDefault();
+                    lenis.scrollTo(target, { 
+                        offset: -80, // perfect space for header
+                        duration: 1.5,
+                        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+                    });
+                }
+            });
+        });
+
+        // Final Refresh
+        window.addEventListener('load', () => {
+            ScrollTrigger.refresh();
+        });
+    </script>
+</body>
+
+</html>
