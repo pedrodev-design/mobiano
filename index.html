@@ -755,6 +755,18 @@
 
         /* Hero: mobile */
         @media (max-width: 768px) {
+            /* Fix mobile contrast for thin fonts */
+            .hero-subtitle,
+            .section-paragraph,
+            .glass-quote,
+            .marca-quote,
+            .ceo-description,
+            .producao-tagline,
+            .producao-mid-text,
+            .showroom-item p,
+            .footer-tagline {
+                font-weight: 400 !important;
+            }
             .hero-content {
                 grid-template-columns: 1fr !important;
                 padding: 96px 20px 72px !important;
@@ -2245,19 +2257,14 @@
                         </div>
                     </div>
 
-                    <div class="glass-footer">
+                    <div class="glass-footer" style="letter-spacing: 0.05em; font-size: 10px;">
                         <div class="glass-footer-dot"></div>
-                        Estado de SP &nbsp;·&nbsp; Brasil sob consulta
+                        Atendimento em SP &nbsp;|&nbsp; Projetos Nacionais sob consulta
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Scroll indicator -->
-        <div class="hero-scroll">
-            <div class="hero-scroll-line"></div>
-            <span>Scroll</span>
-        </div>
     </section>
 
     <section id="ambientes" class="section section-white reveal">
@@ -3218,6 +3225,313 @@
     })();
     </script>
 
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION: LOCALIZAÇÃO REFINED
+    ═══════════════════════════════════════════════════════════ -->
+    <style>
+        .localizacao-refined {
+            background: #0a0908;
+            padding: 140px 0;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-top: 80px;
+        }
+
+        .loc-refined-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 120px;
+            align-items: center;
+        }
+
+        .loc-text-col {
+            padding-right: 40px;
+        }
+
+        .loc-kicker-refined {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6em;
+            color: #c5a36b;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .loc-kicker-refined .line {
+            width: 40px;
+            height: 1px;
+            background: #c5a36b;
+        }
+
+        .loc-title-refined {
+            font-size: clamp(48px, 5.5vw, 80px);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            color: white;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .loc-title-refined em {
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .loc-desc-refined {
+            font-size: 16px;
+            font-weight: 300;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
+            margin-bottom: 48px;
+            max-width: 480px;
+        }
+
+        .loc-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 48px;
+            padding-top: 48px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .loc-detail-block strong {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #c5a36b;
+            margin-bottom: 12px;
+        }
+
+        .loc-detail-block span {
+            display: block;
+            font-size: 14px;
+            font-weight: 300;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
+        }
+
+        .loc-detail-block .spacing {
+            height: 32px;
+        }
+
+        .loc-visual-col {
+            position: relative;
+        }
+
+        .loc-image-wrapper {
+            width: 100%;
+            max-width: 460px;
+            aspect-ratio: 4/5;
+            margin-left: auto;
+            overflow: hidden;
+            background: #1c1917;
+            position: relative;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .loc-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.2) contrast(1.1);
+        }
+
+        .loc-map-insert {
+            position: absolute;
+            bottom: -50px;
+            left: -80px;
+            width: 420px;
+            height: 280px;
+            background: #0a0908;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 8px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
+            z-index: 10;
+        }
+
+        .loc-map-insert iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: grayscale(1) invert(0.9) contrast(1.2);
+        }
+        
+        .loc-map-tag {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.4em;
+            color: #0a0908;
+            background: #c5a36b;
+            padding: 6px 12px;
+            z-index: 11;
+            pointer-events: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .loc-map-tag::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: #0a0908;
+            border-radius: 50%;
+            animation: pulse-dot-dark 2s infinite;
+        }
+
+        @keyframes pulse-dot-dark {
+            0% { box-shadow: 0 0 0 0 rgba(10, 9, 8, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(10, 9, 8, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(10, 9, 8, 0); }
+        }
+
+        .btn-loc {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 44px;
+            background: transparent;
+            color: #c5a36b;
+            border: 1px solid rgba(197, 163, 107, 0.5);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.35em;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            border-radius: 2px;
+        }
+
+        .btn-loc:hover {
+            background: #c5a36b;
+            color: #0a0908;
+            border-color: #c5a36b;
+        }
+
+        .btn-loc-arrow {
+            transition: transform 0.4s ease;
+        }
+
+        .btn-loc:hover .btn-loc-arrow {
+            transform: translateX(4px) translateY(-4px);
+        }
+
+        @media (max-width: 1024px) {
+            .loc-refined-grid {
+                grid-template-columns: 1fr;
+                gap: 80px;
+            }
+            .loc-text-col {
+                padding-right: 0;
+            }
+            .loc-visual-col {
+                padding-left: 20px;
+            }
+            .loc-image-wrapper {
+                margin: 0 auto;
+                max-width: 100%;
+                aspect-ratio: 4/3;
+            }
+            .loc-map-insert {
+                bottom: -30px;
+                left: -30px;
+                width: 320px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .localizacao-refined {
+                padding: 80px 0;
+            }
+            .loc-details-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                padding-top: 32px;
+            }
+            .loc-image-wrapper {
+                aspect-ratio: 1/1;
+            }
+            .loc-map-insert {
+                left: 10px;
+                bottom: -10px;
+                width: 260px;
+                height: 180px;
+                padding: 4px;
+            }
+            .loc-map-tag {
+                font-size: 8px;
+                padding: 4px 8px;
+                bottom: 8px;
+                left: 8px;
+            }
+            .btn-loc {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <section id="localizacao" class="localizacao-refined reveal">
+        <div class="container loc-refined-grid">
+            <div class="loc-text-col">
+                <div class="loc-kicker-refined"><span class="line"></span> Sede Mobiano</div>
+                <h2 class="loc-title-refined">O Ponto<br><em>Zero.</em></h2>
+                
+                <p class="loc-desc-refined">
+                    Rigor técnico e apuro estético convergem em nosso ateliê. Um espaço concebido não apenas para fabricar, mas para orquestrar o design de alto padrão em sua forma mais pura.
+                </p>
+
+                <div class="loc-details-grid">
+                    <div class="loc-detail-block">
+                        <strong>Logradouro</strong>
+                        <span>Rua David Ben Gurion, 412<br>
+                        Jardim Monte Kemel<br>
+                        São Paulo / SP</span>
+                    </div>
+                    <div class="loc-detail-block">
+                        <strong>CEP</strong>
+                        <span>05634-000</span>
+                        <div class="spacing"></div>
+                        <strong>Coordenadas Base</strong>
+                        <span>-23.6009°, -46.7323°</span>
+                    </div>
+                </div>
+
+                <a class="btn-loc" href="https://maps.google.com/?q=Rua+David+Ben+Gurion+412+-+Jardim+Monte+Kemel,+São+Paulo,+Brazil+05634000" target="_blank">
+                    Traçar Rota <i class="fas fa-arrow-up btn-loc-arrow" style="margin-left:8px; transform: rotate(45deg);"></i>
+                </a>
+            </div>
+
+            <div class="loc-visual-col stagger-up delay-1">
+                <div class="loc-image-wrapper">
+                    <!-- High end architectural representation of the HQ / Atelier -->
+                    <img src="img/img1.png" alt="Ateliê Mobiano" loading="lazy">
+                </div>
+                <div class="loc-map-insert">
+                    <div class="loc-map-tag">ZONA SUL, SP</div>
+                    <iframe 
+                        src="https://maps.google.com/maps?q=Rua%20David%20Ben%20Gurion%20412,%20Jardim%20Monte%20Kemel,%20S%C3%A3o%20Paulo%20-%20SP,%2005634-000&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="lojas" class="section showrooms section-neutral">
         <div class="container" style="text-align:center;">
             <div class="showroom-badge">Onde Atuamos</div>
@@ -3293,7 +3607,7 @@
                                 WhatsApp</a></li>
                         <li><a href="mailto:contato@mobiano.com.br">contato@mobiano.com.br</a></li>
                         <li>
-                            <p style="font-size: 12px; color: #78716c; margin-top: 12px;">São Paulo — Brasil sob consulta
+                            <p style="font-size: 12px; color: #78716c; margin-top: 12px;">Sediados em São Paulo<br>Atendemos todo o Brasil mediante consulta.
                             </p>
                         </li>
                     </ul>
