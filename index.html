@@ -3902,6 +3902,7 @@
         }
 
         function closeMenu() {
+            lenis.start();
             gsap.to(mobileLinks, { y: 20, opacity: 0, stagger: 0.04, duration: 0.3, ease: 'power2.in' });
             gsap.to(mobileClose, { opacity: 0, duration: 0.2 });
             gsap.to(mobileMenu, {
@@ -3909,7 +3910,6 @@
                 onComplete: () => {
                     mobileMenu.classList.remove('active');
                     burgerIcon.classList.remove('active');
-                    lenis.start();
                 }
             });
         }
