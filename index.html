@@ -21,6 +21,16 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        a:active, button:active {
+            transform: scale(0.96) !important;
+            transition: transform 0.1s ease !important;
         }
 
         html {
@@ -3919,10 +3929,6 @@
         });
 
         mobileClose.addEventListener('click', closeMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
-
-
-
         // --- SMOOTH SCROLL LOGIC ---
         const navLinks = document.querySelectorAll('a[href^="#"]');
         navLinks.forEach(link => {
@@ -3933,11 +3939,24 @@
                 const target = document.querySelector(targetId);
                 if (target) {
                     e.preventDefault();
-                    lenis.scrollTo(target, { 
-                        offset: -80, // perfect space for header
-                        duration: 1.5,
-                        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-                    });
+                    
+                    if (mobileMenu.classList.contains('active')) {
+                        closeMenu();
+                        
+                        setTimeout(() => {
+                            lenis.scrollTo(target, { 
+                                offset: -80,
+                                duration: 1.5,
+                                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+                            });
+                        }, 100);
+                    } else {
+                        lenis.scrollTo(target, { 
+                            offset: -80,
+                            duration: 1.5,
+                            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+                        });
+                    }
                 }
             });
         });
